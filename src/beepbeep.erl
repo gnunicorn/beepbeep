@@ -85,7 +85,9 @@ render_template(FullPathToFile,ViewFile,Data) ->
     Name1 = filename:basename(Name,".html"),
     ModName = list_to_atom(Name1 ++ "_view"),
 
-    erlydtl:compile(FullPathToFile,ModName),
-    ModName:render(Data).    
-	    
-	    
+    %% small fix: ModName:render doesn't work is the compiling
+    %% fails for some reason. Better checking that the compiling
+    %% worked and fail before than gettting a weird "blabla:render no function"
+    %% error instead.
+    ok = erlydtl:compile(FullPathToFile,ModName),
+    ModName:render(Data). 
